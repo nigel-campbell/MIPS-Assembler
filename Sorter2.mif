@@ -1,0 +1,178 @@
+WIDTH=32;
+DEPTH=2048;
+ADDRESS_RADIX=HEX;
+DATA_RADIX=HEX;
+CONTENT BEGIN
+[00000000..0000000f] : DEAD;
+-- MVHI SP StkTop
+00000010 : 8be00000;
+-- ADDI SP SP StkTop
+00000011 : 80ee2000;
+-- MVHI GP IOBASE
+00000012 : 8bc00000;
+-- ANDI S0 S0 0
+00000013 : 84660000;
+-- SW S0 OFSLEDR(GP) ; Turn off LEDR
+00000014 : 50c60004;
+-- SW S0 OFSLEDG(GP) ; Turn off LEDG
+00000015 : 50c60008;
+-- ADDI T0 S0 Array ; T0 is CurPtr set to start of array
+00000016 : 80460100;
+-- ADDI T1 T0 ArrayBytes ; T1 is EndPtr set to end of array
+00000017 : 80541000;
+-- ADDI S1 S0 9 ; S1 is the current value of the array element for initialization
+00000018 : 80760009;
+-- SW S1 0(T0) ; Store value into an element
+00000019 : 50470000;
+-- ADDI S1 S1 13 ; Add 13 to the value for next element
+0000001a : 8077000d;
+-- ADDI T0 T0 4 ; Move to next element
+0000001b : 80440004;
+-- BNE T0 T1 Init ; if(CurPtr! EndPtr) goto Init;
+0000001c : 6945fffc;
+-- CALL ChkAsc(S0) ; Call ChkAsc
+0000001d : b0f6002f;
+-- ADDI S1 S0 ItNum ; We will keep the iteration count in S1
+0000001e : 8076012c;
+-- SW S1 OFSHEX(GP) ; Display loop counter
+0000001f : 50c70000;
+-- ADDI A0 S0 Array
+00000020 : 80060100;
+-- ADDI A1 A0 ArrayBytes
+00000021 : 80101000;
+-- CALL SortDesc(S0) ; SortDesc(Array ArrayBytes)
+00000022 : b0f60057;
+-- CALL ChkDesc(S0) ; ChkDesc()
+00000023 : b0f6003c;
+-- ADDI A0 S0 Array
+00000024 : 80060100;
+-- ADDI A1 A0 ArrayBytes
+00000025 : 80101000;
+-- CALL SortAsc(S0) ; SortAsc(Array ArrayBytes)
+00000026 : b0f60049;
+-- CALL ChkAsc(S0) ; ChkAsc()
+00000027 : b0f6002f;
+-- ADDI S1 S1 -1
+00000028 : 8077ffff;
+-- SW S1 OFSHEX(GP) ; Display loop counter
+00000029 : 50c70000;
+-- BNEZ S1 MainLoop
+0000002a : 6d70fff5;
+-- NOT T0 S0 ; All-ones in T0
+0000002b : c466000;
+-- SW T0 OFSLEDG(GP) ; Turn on LEDG
+0000002c : 50c40008;
+-- SW S0 OFSLEDR(GP) ; Turn off LEDR
+0000002d : 50c60004;
+-- BT T0 S0 Done ; Loop forever
+0000002e : 6846fffc;
+-- ADDI A0 S0 Array
+0000002f : 80060100;
+-- ADDI A1 A0 ArrayBytes
+00000030 : 80101000;
+-- ADDI A2 S0 9
+00000031 : 80260009;
+-- LW T0 0(A0)
+00000032 : 90400000;
+-- BEQ T0 A2 GoodChkAsc
+00000033 : 61420004;
+-- SW T0 OFSHEX(GP) ; Put value we read on HEX
+00000034 : 50c40000;
+-- ADDI T1 S0 0x3E0
+00000035 : 805603e0;
+-- SW T1 OFSLEDR(GP) ; Turn on upper half of LEDR
+00000036 : 50c50004;
+-- BT T0 T0 ErrChkAsc ; Loop forever
+00000037 : 6844fffc;
+-- ADDI A2 a2 13
+00000038 : 8022000d;
+-- ADDI A0 A0 4
+00000039 : 80000004;
+-- BNE A0 A1 LoopChkAsc
+0000003a : 6901fff7;
+-- RET
+0000003b : b09f0000;
+-- ADDI A1 S0 Array
+0000003c : 80160100;
+-- ADDI A0 A1 ArrayBytes
+0000003d : 80011000;
+-- ADDI A2 S0 9
+0000003e : 80260009;
+-- SUBI A0 A0 4
+0000003f : 81000004;
+-- LW T1 0(A0)
+00000040 : 90500000;
+-- BEQ A2 T1 GoodChkDesc
+00000041 : 61250004;
+-- SW T1 OFSHEX(GP) ; Put value we read on HEX
+00000042 : 50c50000;
+-- ADDI T0 S0 0x01F
+00000043 : 8046001f;
+-- SW T0 OFSLEDR(GP) ; Turn on lower half of LEDR
+00000044 : 50c40004;
+-- BT T1 T0 ErrChkDesc ; Loop forever
+00000045 : 6854fffc;
+-- ADDI A2 A2 13
+00000046 : 8022000d;
+-- BNE A1 A0 LoopChkDesc
+00000047 : 6910fff7;
+-- RET
+00000048 : b09f0000;
+-- BEQ A0 A1 SortAscEndI
+00000049 : 6101000c;
+-- LW T0 0(A0) ; T0 will be equal to what should be in *i
+0000004a : 90400000;
+-- ADDI A2 A0 4
+0000004b : 80200004;
+-- BEQ A2 A1 SortAscEndJ
+0000004c : 61210006;
+-- LW T1 0(A2) ; T1 *j
+0000004d : 90520000;
+-- BLTE T0 T1 SortAscNoSwap
+0000004e : 63450002;
+-- SW T0 0(A2) ; *j T0 (*j becomes what was in *i)
+0000004f : 50240000;
+-- ADD T0 T1 S0 ; T0 T1 (*i becomes what was in *j)
+00000050 : 456000;
+-- ADDI A2 A2 4
+00000051 : 80220004;
+-- BT T0 T1 SortAscLoopJ
+00000052 : 6845fff9;
+-- SW T0 0(A0) ; Save T0 back into *i
+00000053 : 50040000;
+-- ADDI A0 A0 4
+00000054 : 80000004;
+-- BT A0 A1 SortAscLoopI
+00000055 : 6801fff3;
+-- RET
+00000056 : b09f0000;
+-- ADDI T0 A0 0
+00000057 : 80400000;
+-- BEQ T0 A1 SortDescEndI
+00000058 : 6141000b;
+-- ADDI T1 T0 4
+00000059 : 80540004;
+-- BEQ T1 A1 SortDescEndJ
+0000005a : 61510007;
+-- LW A2 0(T0) ; A2 *i
+0000005b : 90240000;
+-- LW A3 0(T1) ; A3 *j
+0000005c : 90350000;
+-- BGTE A2 A3 SortDescNoSwap
+0000005d : 6a230002;
+-- SW A2 0(T1) ; *j A2
+0000005e : 50520000;
+-- SW A3 0(T0) ; *i A3
+0000005f : 50430000;
+-- ADDI T1 T1 4
+00000060 : 80550004;
+-- BT A0 A0 SortDescLoopJ
+00000061 : 6800fff8;
+-- ADDI T0 T0 4
+00000062 : 80440004;
+-- BT A0 A0 SortDescLoopI
+00000063 : 6800fff4;
+-- RET
+00000064 : b09f0000;
+[0065..07ff] : DEAD;
+END;

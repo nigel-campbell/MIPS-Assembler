@@ -1,0 +1,361 @@
+WIDTH=32;
+DEPTH=2048;
+ADDRESS_RADIX=HEX;
+DATA_RADIX=HEX;
+CONTENT BEGIN
+-- bt t0 t0 AtZero
+00000000 : 68440008;
+-- addi s1 s1 0x1
+00000001 : 80770001;
+-- addi s1 s1 0x1
+00000002 : 80770001;
+-- addi s1 s1 0x1
+00000003 : 80770001;
+-- addi s1 s1 0x1
+00000004 : 80770001;
+-- addi s1 s1 0x1
+00000005 : 80770001;
+-- addi s1 s1 0x1
+00000006 : 80770001;
+-- addi s1 s1 0x1
+00000007 : 80770001;
+-- addi s1 s1 0x1
+00000008 : 80770001;
+-- mvhi gp IOBASE
+00000009 : 8bc0f000;
+-- andi s0 s0 0
+0000000a : 84660000;
+-- not t0 s0
+0000000b : c466000;
+-- sw t0 OFSLEDR(gp)
+0000000c : 50c40004;
+-- addi t0 s0 0xBAD
+0000000d : 80460bad;
+-- sw t0 OFSHEX(gp)
+0000000e : 50c40000;
+-- bt t0 t0 AtZero
+0000000f : 6844fff9;
+-- addi s2 s0 0x0BEF
+00000010 : 80860bef;
+-- xor fp fp fp
+00000011 : 6ddd000;
+-- mvhi gp IOBASE
+00000012 : 8bc0f000;
+-- mvhi s0 0
+00000013 : 8b600000;
+-- addi s0 s0 1
+00000014 : 80660001;
+-- sw s0 OFSLEDG(gp)
+00000015 : 50c60008;
+-- sw fp OFSLEDR(gp)
+00000016 : 50cd0004;
+-- addi s0 s0 1
+00000017 : 80660001;
+-- sw s0 OFSLEDG(gp)
+00000018 : 50c60008;
+-- addi t0 fp -1
+00000019 : 804dffff;
+-- addi t1 fp 2
+0000001a : 805d0002;
+-- addi a0 fp 1
+0000001b : 800d0001;
+-- add a1 t0 t1
+0000001c : 145000;
+-- beq a0 a1 AddWorks
+0000001d : 61010004;
+-- not t0 fp
+0000001e : c4dd000;
+-- sw t0 OFSLEDR(gp)
+0000001f : 50c40004;
+-- sw a0 OFSHEX(gp)
+00000020 : 50c00000;
+-- bt t0 t0 AddFailed
+00000021 : 6844fffc;
+-- addi s0 s0 1
+00000022 : 80660001;
+-- sw s0 OFSLEDG(gp)
+00000023 : 50c60008;
+-- addi t0 fp 7 ; t0 is 7 (0x00000007)
+00000024 : 804d0007;
+-- addi t1 t0 3 ; t1 is 10 (0x0000000A)
+00000025 : 80540003;
+-- add a0 t1 t1 ; a0 is 20 (0x00000014)
+00000026 : 55000;
+-- ori a1 a0 0x25 ; a1 is 0x00000035)
+00000027 : 85100025;
+-- andi a2 a1 0xD1 ; a2 is 17 0x00000011
+00000028 : 842100d1;
+-- xor a0 a0 a1 ; a0 is 33 0x00000021
+00000029 : 6001000;
+-- or a1 a0 t0 ; a1 is 0x00000027
+0000002a : 5104000;
+-- nor a2 t0 a2 ; a2 is -2 0xFFFFFFFE
+0000002b : d242000;
+-- nand a3 a2 a1 ; a3 is 0xFFFFFFD9
+0000002c : c321000;
+-- sub a1 t0 a2 ; a1 is 9 0x00000009
+0000002d : 1142000;
+-- and t0 a1 a2 ; t0 is 8 0x00000008
+0000002e : 4412000;
+-- nxor a1 a1 t0 ; a1 is -2 0xFFFFFFFE
+0000002f : e114000;
+-- xor a2 a2 a3 ; a3 is 0x00000027
+00000030 : 6223000;
+-- sub a0 a0 a2 ; a0 is -6
+00000031 : 1002000;
+-- add a0 a1 a0 ; a0 is -8
+00000032 : 10000;
+-- addi t1 fp -8
+00000033 : 805dfff8;
+-- bne a0 t1 AluWorks
+00000034 : 69050004;
+-- not t0 fp
+00000035 : c4dd000;
+-- sw t0 OFSLEDR(gp)
+00000036 : 50c40004;
+-- sw a0 OFSHEX(gp)
+00000037 : 50c00000;
+-- bt t0 t0 AluFailed
+00000038 : 6844fffc;
+-- addi s0 s0 1
+00000039 : 80660001;
+-- sw s0 OFSLEDG(gp)
+0000003a : 50c60008;
+-- addi a1 fp 1
+0000003b : 801d0001;
+-- addi t0 fp 75
+0000003c : 804d004b;
+-- addi t1 fp 34
+0000003d : 805d0022;
+-- addi a0 fp -80
+0000003e : 800dffb0;
+-- lte a2 t0 t1
+0000003f : 23245000;
+-- bne a2 fp CmpFailed
+00000040 : 692d0045;
+-- addi s0 s0 1
+00000041 : 80660001;
+-- sw s0 OFSLEDG(gp)
+00000042 : 50c60008;
+-- lt a2 t0 t1
+00000043 : 22245000;
+-- bne a2 fp CmpFailed
+00000044 : 692d0041;
+-- addi s0 s0 1
+00000045 : 80660001;
+-- sw s0 OFSLEDG(gp)
+00000046 : 50c60008;
+-- eq a2 t0 t1
+00000047 : 21245000;
+-- bne a2 fp CmpFailed
+00000048 : 692d003d;
+-- addi s0 s0 1
+00000049 : 80660001;
+-- sw s0 OFSLEDG(gp)
+0000004a : 50c60008;
+-- ne a2 t0 t1
+0000004b : 29245000;
+-- bne a2 a1 CmpFailed
+0000004c : 69210039;
+-- addi s0 s0 1
+0000004d : 80660001;
+-- sw s0 OFSLEDG(gp)
+0000004e : 50c60008;
+-- gt a2 t0 t1
+0000004f : 2b245000;
+-- bne a2 a1 CmpFailed
+00000050 : 69210035;
+-- addi s0 s0 1
+00000051 : 80660001;
+-- sw s0 OFSLEDG(gp)
+00000052 : 50c60008;
+-- gte a2 t0 t1
+00000053 : 2a245000;
+-- bne a2 a1 CmpFailed
+00000054 : 69210031;
+-- addi s0 s0 1
+00000055 : 80660001;
+-- sw s0 OFSLEDG(gp)
+00000056 : 50c60008;
+-- lte a2 t1 t1
+00000057 : 23255000;
+-- bne a2 a1 CmpFailed
+00000058 : 6921002d;
+-- addi s0 s0 1
+00000059 : 80660001;
+-- sw s0 OFSLEDG(gp)
+0000005a : 50c60008;
+-- lt a2 t1 t1
+0000005b : 22255000;
+-- bne a2 fp CmpFailed
+0000005c : 692d0029;
+-- addi s0 s0 1
+0000005d : 80660001;
+-- sw s0 OFSLEDG(gp)
+0000005e : 50c60008;
+-- eq a2 t1 t1
+0000005f : 21255000;
+-- bne a2 a1 CmpFailed
+00000060 : 69210025;
+-- addi s0 s0 1
+00000061 : 80660001;
+-- sw s0 OFSLEDG(gp)
+00000062 : 50c60008;
+-- ne a2 t1 t1
+00000063 : 29255000;
+-- bne a2 fp CmpFailed
+00000064 : 692d0021;
+-- addi s0 s0 1
+00000065 : 80660001;
+-- sw s0 OFSLEDG(gp)
+00000066 : 50c60008;
+-- gt a2 t1 t1
+00000067 : 2b255000;
+-- bne a2 fp CmpFailed
+00000068 : 692d001d;
+-- addi s0 s0 1
+00000069 : 80660001;
+-- sw s0 OFSLEDG(gp)
+0000006a : 50c60008;
+-- gte a2 t1 t1
+0000006b : 2a255000;
+-- bne a2 a1 CmpFailed
+0000006c : 69210019;
+-- addi s0 s0 1
+0000006d : 80660001;
+-- sw s0 OFSLEDG(gp)
+0000006e : 50c60008;
+-- lte a2 a0 t0
+0000006f : 23204000;
+-- bne a2 a1 CmpFailed
+00000070 : 69210015;
+-- addi s0 s0 1
+00000071 : 80660001;
+-- sw s0 OFSLEDG(gp)
+00000072 : 50c60008;
+-- lt a2 a0 t0
+00000073 : 22204000;
+-- bne a2 a1 CmpFailed
+00000074 : 69210011;
+-- addi s0 s0 1
+00000075 : 80660001;
+-- sw s0 OFSLEDG(gp)
+00000076 : 50c60008;
+-- eq a2 a0 t0
+00000077 : 21204000;
+-- bne a2 fp CmpFailed
+00000078 : 692d000d;
+-- addi s0 s0 1
+00000079 : 80660001;
+-- sw s0 OFSLEDG(gp)
+0000007a : 50c60008;
+-- ne a2 a0 t0
+0000007b : 29204000;
+-- bne a2 a1 CmpFailed
+0000007c : 69210009;
+-- addi s0 s0 1
+0000007d : 80660001;
+-- sw s0 OFSLEDG(gp)
+0000007e : 50c60008;
+-- gt a2 a0 t0
+0000007f : 2b204000;
+-- bne a2 fp CmpFailed
+00000080 : 692d0005;
+-- addi s0 s0 1
+00000081 : 80660001;
+-- sw s0 OFSLEDG(gp)
+00000082 : 50c60008;
+-- gte a2 a0 t0
+00000083 : 2a204000;
+-- bne a2 fp CmpFailed
+00000084 : 692d0001;
+-- bt t0 t0 CmpWorks
+00000085 : 68440004;
+-- not t0 gp
+00000086 : c4cc000;
+-- sw t0 OFSLEDR(gp)
+00000087 : 50c40004;
+-- sw a2 OFSHEX(gp)
+00000088 : 50c20000;
+-- bt t0 t0 CmpFailed
+00000089 : 6844fffc;
+-- addi s0 s0 1
+0000008a : 80660001;
+-- sw s0 OFSLEDG(gp)
+0000008b : 50c60008;
+-- addi t0 fp 0x37
+0000008c : 804d0037;
+-- addi t1 fp 0xE1
+0000008d : 805d00e1;
+-- addi a2 fp 1024
+0000008e : 802d0400;
+-- sw t0 0(a2)
+0000008f : 50240000;
+-- sw t1 4(a2)
+00000090 : 50250004;
+-- addi a2 a2 4
+00000091 : 80220004;
+-- lw a0 0(a2)
+00000092 : 90020000;
+-- bne a0 t1 MemFailed
+00000093 : 69050002;
+-- lw a0 -4(a2)
+00000094 : 9002fffc;
+-- beq a0 t0 MemWorks
+00000095 : 61040004;
+-- not t0 fp
+00000096 : c4dd000;
+-- sw t0 OFSLEDR(gp)
+00000097 : 50c40004;
+-- sw a0 OFSHEX(gp)
+00000098 : 50c00000;
+-- bt t0 t0 MemFailed
+00000099 : 6844fffc;
+-- addi s0 s0 1
+0000009a : 80660001;
+-- sw s0 OFSLEDG(gp)
+0000009b : 50c60008;
+-- addi t1 fp JalRet
+0000009c : 805d009e;
+-- jal t0 JalTarg(fp)
+0000009d : b04d009f;
+-- bt t0 t0 JalWorks
+0000009e : 68440006;
+-- bne t0 t1 JalFailed
+0000009f : 69450001;
+-- jal t1 0(t0)
+000000a0 : b0540000;
+-- not t0 fp
+000000a1 : c4dd000;
+-- sw t0 OFSLEDR(gp)
+000000a2 : 50c40004;
+-- sw t0 OFSHEX(gp)
+000000a3 : 50c40000;
+-- bt t0 t0 JalFailed
+000000a4 : 6844fffc;
+-- addi s0 s0 1
+000000a5 : 80660001;
+-- sw s0 OFSLEDG(gp)
+000000a6 : 50c60008;
+-- lw t1 OFSKEY(gp)
+000000a7 : 905c0010;
+-- sw t1 OFSHEX(gp)
+000000a8 : 50c50000;
+-- beq t1 fp WaitPress1
+000000a9 : 615dfffd;
+-- lw t1 OFSKEY(gp)
+000000aa : 905c0010;
+-- sw t1 OFSHEX(gp)
+000000ab : 50c50000;
+-- bne t1 fp WaitRelease1
+000000ac : 695dfffd;
+-- not t0 fp
+000000ad : c4dd000;
+-- sw t0 OFSLEDG(gp)
+000000ae : 50c40008;
+-- sw t0 OFSHEX(gp)
+000000af : 50c40000;
+-- bt t0 t0 Done
+000000b0 : 6844fffc;
+[00b1..07ff] : DEAD;
+END;
